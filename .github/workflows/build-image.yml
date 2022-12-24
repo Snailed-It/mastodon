@@ -39,9 +39,7 @@ jobs:
       - uses: docker/metadata-action@v4
         id: meta
         with:
-          images: |
-            tootsuite/mastodon
-            ghcr.io/mastodon/mastodon
+          images: ghcr.io/Snailed-It/mastodon
           flavor: |
             latest=auto
           tags: |
