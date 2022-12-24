@@ -9,6 +9,14 @@ class ContentSecurityPolicy
     url_from_configured_asset_host || url_from_base_host
   end
 
+  def extra_asset_hosts
+    ENV.fetch('EXTRA_ASSET_HOSTS'){ '' }.split(/\s*,\s*/)
+  end
+
+  def extra_connect_hosts
+    ENV.fetch('EXTRA_CONNECT_HOSTS'){ '' }.split(/\s*,\s*/)
+  end
+
   def media_hosts
     [assets_host, cdn_host_value, paperclip_root_url].compact
   end
