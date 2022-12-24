@@ -10,6 +10,9 @@ base_host = Rails.configuration.x.web_domain
 
 assets_host   = Rails.configuration.action_controller.asset_host
 assets_host ||= host_to_url(base_host)
+extra_asset_hosts = ENV.fetch('EXTRA_ASSET_HOSTS'){ '' }.split(/\s*,\s*/)
+
+extra_connect_hosts = ENV.fetch('EXTRA_CONNECT_HOSTS'){ '' }.split(/\s*,\s*/)
 
 media_host   = host_to_url(ENV['S3_ALIAS_HOST'])
 media_host ||= host_to_url(ENV['S3_CLOUDFRONT_HOST'])
@@ -31,13 +34,13 @@ Rails.application.config.content_security_policy do |p|
   if Rails.env.development?
     webpacker_urls = %w(ws http).map { |protocol| "#{protocol}#{Webpacker.dev_server.https? ? 's' : ''}://#{Webpacker.dev_server.host_with_port}" }
 
-    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url, *webpacker_urls
-    p.script_src  :self, :unsafe_inline, :unsafe_eval, assets_host
+    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url, *webpacker_urls, *extra_connect_hosts
+    p.script_src  :self, :unsafe_inline, :unsafe_eval, assets_host, *extra_asset_hosts
     p.child_src   :self, :blob, assets_host
     p.worker_src  :self, :blob, assets_host
   else
-    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url
-    p.script_src  :self, assets_host, "'wasm-unsafe-eval'"
+    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url, *extra_connect_hosts
+    p.script_src  :self, assets_host, "'wasm-unsafe-eval'", *extra_asset_hosts
     p.child_src   :self, :blob, assets_host
     p.worker_src  :self, :blob, assets_host
   end
