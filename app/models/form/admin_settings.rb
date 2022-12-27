@@ -2,6 +2,7 @@
 
 class Form::AdminSettings
   include ActiveModel::Model
+  include ActiveModel::Callbacks
 
   include AuthorizedFetchHelper
 
@@ -37,12 +38,14 @@ class Form::AdminSettings
     status_page_url
     captcha_enabled
     authorized_fetch
+    status_max_chars
   ).freeze
 
   INTEGER_KEYS = %i(
     media_cache_retention_period
     content_cache_retention_period
     backups_retention_period
+    status_max_chars
   ).freeze
 
   BOOLEAN_KEYS = %i(
@@ -77,10 +80,15 @@ class Form::AdminSettings
   validates :bootstrap_timeline_accounts, existing_username: { multiple: true }, if: -> { defined?(@bootstrap_timeline_accounts) }
   validates :show_domain_blocks, inclusion: { in: %w(disabled users all) }, if: -> { defined?(@show_domain_blocks) }
   validates :show_domain_blocks_rationale, inclusion: { in: %w(disabled users all) }, if: -> { defined?(@show_domain_blocks_rationale) }
-  validates :media_cache_retention_period, :content_cache_retention_period, :backups_retention_period, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@media_cache_retention_period) || defined?(@content_cache_retention_period) || defined?(@backups_retention_period) }
-  validates :site_short_description, length: { maximum: 200 }, if: -> { defined?(@site_short_description) }
+  validates :media_cache_retention_period, :content_cache_retention_period, :backups_retention_period, :status_max_chars, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@media_cache_retention_period) || defined?(@content_cache_retention_period) || defined?(@backups_retention_period) || defined?(@status_max_chars) }
+  validates :site_short_description, length: { maximum: DESCRIPTION_LIMIT }, if: -> { defined?(@site_short_description) }
   validates :status_page_url, url: true, allow_blank: true
   validate :validate_site_uploads
+
+  define_model_callbacks :save
+  before_save do
+    @status_max_chars = StatusLengthValidator::DEFAULT_MAX_CHARS if @status_max_chars.blank?
+  end
 
   KEYS.each do |key|
     define_method(key) do
@@ -113,14 +121,16 @@ class Form::AdminSettings
     # So for now, return early if errors aren't empty.
     return false unless errors.empty? && valid?
 
-    KEYS.each do |key|
-      next unless instance_variable_defined?("@#{key}")
+	  run_callbacks(:save) do
+      KEYS.each do |key|
+        next unless instance_variable_defined?("@#{key}")
 
-      if UPLOAD_KEYS.include?(key)
-        public_send(key).save
-      else
-        setting = Setting.where(var: key).first_or_initialize(var: key)
-        setting.update(value: typecast_value(key, instance_variable_get("@#{key}")))
+        if UPLOAD_KEYS.include?(key)
+          public_send(key).save
+        else
+          setting = Setting.where(var: key).first_or_initialize(var: key)
+          setting.update(value: typecast_value(key, instance_variable_get("@#{key}")))
+        end
       end
     end
   end
