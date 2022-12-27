@@ -10,6 +10,7 @@ import {
   SERVER_DOMAIN_BLOCKS_FETCH_FAIL,
 } from 'mastodon/actions/server';
 import { Map as ImmutableMap, List as ImmutableList, fromJS } from 'immutable';
+import { STORE_HYDRATE } from '../actions/store';
 
 const initialState = ImmutableMap({
   server: ImmutableMap({
@@ -27,8 +28,12 @@ const initialState = ImmutableMap({
   }),
 });
 
+const hydrate = (state, server) => state.mergeDeep(server);
+
 export default function server(state = initialState, action) {
   switch (action.type) {
+  case STORE_HYDRATE:
+    return hydrate(state, action.state.get('server'));
   case SERVER_FETCH_REQUEST:
     return state.setIn(['server', 'isLoading'], true);
   case SERVER_FETCH_SUCCESS:
