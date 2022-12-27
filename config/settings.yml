@@ -38,6 +38,7 @@ defaults: &defaults
   require_invite_text: false
   backups_retention_period: 7
   captcha_enabled: false
+  status_max_chars: 500
 
 development:
   <<: *defaults
