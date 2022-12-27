@@ -97,6 +97,7 @@ en:
         site_terms: Use your own privacy policy or leave blank to use the default. Can be structured with Markdown syntax.
         site_title: How people may refer to your server besides its domain name.
         status_page_url: URL of a page where people can see the status of this server during an outage
+        status_max_chars: Maximum number of characters allowed in a status. Leave blank to reset to the default.
         theme: Theme that logged out visitors and new users see.
         thumbnail: A roughly 2:1 image displayed alongside your server information.
         timeline_preview: Logged out visitors will be able to browse the most recent public posts available on the server.
@@ -267,6 +268,7 @@ en:
         site_terms: Privacy Policy
         site_title: Server name
         status_page_url: Status page URL
+        status_max_chars: Max status characters
         theme: Default theme
         thumbnail: Server thumbnail
         timeline_preview: Allow unauthenticated access to public timelines
