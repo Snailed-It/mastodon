@@ -33,6 +33,7 @@ defaults: &defaults
   backups_retention_period: 7
   captcha_enabled: false
   allow_referrer_origin: false
+  status_max_chars: 500
   landing_page: 'trends'
   wrapstodon: true
 

@@ -2,6 +2,7 @@
 
 class Form::AdminSettings
   include ActiveModel::Model
+  include ActiveModel::Callbacks
 
   include AuthorizedFetchHelper
 
@@ -40,6 +41,7 @@ class Form::AdminSettings
     app_icon
     favicon
     min_age
+    status_max_chars
     local_live_feed_access
     remote_live_feed_access
     local_topic_feed_access
@@ -54,6 +56,7 @@ class Form::AdminSettings
     content_cache_retention_period
     backups_retention_period
     min_age
+    status_max_chars
   ).freeze
 
   BOOLEAN_KEYS = %i(
@@ -108,13 +111,18 @@ class Form::AdminSettings
   validates :remote_live_feed_access, inclusion: { in: FEED_ACCESS_MODES }, if: -> { defined?(@remote_live_feed_access) }
   validates :local_topic_feed_access, inclusion: { in: ALTERNATE_FEED_ACCESS_MODES }, if: -> { defined?(@local_topic_feed_access) }
   validates :remote_topic_feed_access, inclusion: { in: FEED_ACCESS_MODES }, if: -> { defined?(@remote_topic_feed_access) }
-  validates :media_cache_retention_period, :content_cache_retention_period, :backups_retention_period, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@media_cache_retention_period) || defined?(@content_cache_retention_period) || defined?(@backups_retention_period) }
+  validates :media_cache_retention_period, :content_cache_retention_period, :backups_retention_period, :status_max_chars, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@media_cache_retention_period) || defined?(@content_cache_retention_period) || defined?(@backups_retention_period) || defined?(@status_max_chars) }
   validates :min_age, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@min_age) }
   validates :site_short_description, length: { maximum: DESCRIPTION_LIMIT }, if: -> { defined?(@site_short_description) }
   validates :thumbnail_description, length: { maximum: DESCRIPTION_LIMIT }, if: -> { defined?(@thumbnail_description) }
   validates :status_page_url, url: true, allow_blank: true
   validate :validate_site_uploads
   validates :landing_page, inclusion: { in: LANDING_PAGE }, if: -> { defined?(@landing_page) }
+
+  define_model_callbacks :save
+  before_save do
+    @status_max_chars = StatusLengthValidator::DEFAULT_MAX_CHARS if @status_max_chars.blank?
+  end
 
   KEYS.each do |key|
     define_method(key) do
@@ -147,16 +155,18 @@ class Form::AdminSettings
     # So for now, return early if errors aren't empty.
     return false unless errors.empty? && valid?
 
-    KEYS.each do |key|
-      next unless instance_variable_defined?(:"@#{key}")
+	  run_callbacks(:save) do
+      KEYS.each do |key|
+        next unless instance_variable_defined?("@#{key}")
 
       cache_digest_value(key) if DIGEST_KEYS.include?(key)
 
-      if UPLOAD_KEYS.include?(key)
-        public_send(key).save
-      else
-        setting = Setting.where(var: key).first_or_initialize(var: key)
-        setting.update(value: typecast_value(key, instance_variable_get(:"@#{key}")))
+        if UPLOAD_KEYS.include?(key)
+          public_send(key).save
+        else
+          setting = Setting.where(var: key).first_or_initialize(var: key)
+          setting.update(value: typecast_value(key, instance_variable_get("@#{key}")))
+        end
       end
     end
   end

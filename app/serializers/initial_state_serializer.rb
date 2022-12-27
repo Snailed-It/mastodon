@@ -5,7 +5,7 @@ class InitialStateSerializer < ActiveModel::Serializer
 
   attributes :meta, :compose, :accounts,
              :media_attachments, :settings,
-             :languages, :features
+             :languages, :features, :server
 
   attribute :critical_updates_pending, if: -> { object&.role&.can?(:view_devops) && SoftwareUpdate.check_enabled? }
 
@@ -91,6 +91,18 @@ class InitialStateSerializer < ActiveModel::Serializer
 
   def features
     Mastodon::Feature.enabled_features
+
+  def server
+    {
+      server: {
+        configuration:
+          {
+            statuses: {
+              max_characters: StatusLengthValidator.max_chars,
+            },
+          },
+      },
+    }
   end
 
   private
