@@ -17,11 +17,11 @@ module Mastodon
     end
 
     def flags
-      ''
+      '.2'
     end
 
     def suffix
-      ''
+      '-snailedit'
     end
 
     def to_a
