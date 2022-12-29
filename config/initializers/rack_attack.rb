@@ -66,7 +66,9 @@ class Rack::Attack
     IpBlock.blocked?(req.remote_ip)
   end
 
-  throttle('throttle_authenticated_api', limit: 1_500, period: 5.minutes) do |req|
+  rate_limit_per_account_value = Integer(ENV.fetch('RATE_LIMIT_PER_ACCOUNT_VALUE'){ 1_500 })
+  rate_limit_per_account_period = Integer(ENV.fetch('RATE_LIMIT_PER_ACCOUNT_PERIOD_MINUTES'){ 5 }).minutes
+  throttle('throttle_authenticated_api', limit: rate_limit_per_account_value, period: rate_limit_per_account_period) do |req|
     req.authenticated_user_id if req.api_request?
   end
 
