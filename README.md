@@ -35,6 +35,25 @@ Click below to **learn more** in a video:
 
 [patreon]: https://www.patreon.com/mastodon
 
+## Extra env variables
+| Env variable                                     | Description                                                                                                 |
+|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| EXTRA_ASSET_HOSTS                                | Extra hosts allowed to serve script assets (i.e. these are added to the CSP's `script_src`)                 | 
+| EXTRA_CONNECT_HOSTS                              | Extra hosts to which scripts are allowed to connect (i.e. these are added to the CSP's `connect_src`)       | 
+| RATE_LIMIT_AUTHENTICATED                         | Max allowed requests, for authenticated users, within a rate limiter period                                 |
+| RATE_LIMIT_AUTHENTICATED_PERIOD_MINUTES          | The rate limiter period (i.e. how long before the count resets) for authenticated users                     |
+| RATE_LIMIT_UNAUTHENTICATED                       | Max allowed requests, for unauthenticated users (i.e. per ip), within a rate limiter period                 |
+| RATE_LIMIT_UNAUTHENTICATED_PERIOD_MINUTES        | The rate limiter period (i.e. how long before the count resets) for unauthenticated users                   |
+| RATE_LIMIT_AUTHENTICATED_PAGING                  | Max allowed paging requests, for authenticated users, within a rate limiter period                          |
+| RATE_LIMIT_AUTHENTICATED_PAGING_PERIOD_MINUTES   | The rate limiter period (i.e. how long before the count resets) for authenticated users using paging APIs   |
+| RATE_LIMIT_UNAUTHENTICATED_PAGING                | Max allowed paging requests, for unauthenticated users, within a rate limiter period                        |
+| RATE_LIMIT_UNAUTHENTICATED_PAGING_PERIOD_MINUTES | The rate limiter period (i.e. how long before the count resets) for unauthenticated users using paging APIs |
+| RATE_LIMIT_API_SIGN_UP                           | Max allowed sign up attempts, via the API, within a rate limiter period                                     |
+| RATE_LIMIT_API_SIGN_UP_PERIOD_MINUTES            | The rate limiter period (i.e. how long before the count resets) for sign up attempts via the api            |
+| RATE_LIMIT_SIGN_UP                               | Max allowed sign up attempts, via the web UI, within a rate limiter period                                  |
+| RATE_LIMIT_SIGN_UP_PERIOD_MINUTES                | The rate limiter period (i.e. how long before the count resets) for sign up attempts via the web UI         |
+
+
 ## Features
 
 <img src="/app/javascript/images/elephant_ui_working.svg?raw=true" align="right" width="30%" />
