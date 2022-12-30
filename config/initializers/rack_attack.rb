@@ -66,9 +66,9 @@ class Rack::Attack
     IpBlock.blocked?(req.remote_ip)
   end
 
-  rate_limit_per_account_value = Integer(ENV.fetch('RATE_LIMIT_PER_ACCOUNT_VALUE'){ 1_500 })
-  rate_limit_per_account_period = Integer(ENV.fetch('RATE_LIMIT_PER_ACCOUNT_PERIOD_MINUTES'){ 5 }).minutes
-  throttle('throttle_authenticated_api', limit: rate_limit_per_account_value, period: rate_limit_per_account_period) do |req|
+  rate_limit_authed = Integer(ENV.fetch('RATE_LIMIT_AUTHENTICATED_VALUE'){ 1_500 })
+  rate_limit_authed_period = Integer(ENV.fetch('RATE_LIMIT_AUTHENTICATED_PERIOD_MINUTES'){ 5 }).minutes
+  throttle('throttle_authenticated_api', limit: rate_limit_authed, period: rate_limit_authed_period) do |req|
     req.authenticated_user_id if req.api_request?
   end
 
@@ -76,7 +76,9 @@ class Rack::Attack
     req.authenticated_token_id if req.api_request?
   end
 
-  throttle('throttle_unauthenticated_api', limit: 300, period: 5.minutes) do |req|
+  rate_limit_non_authed = Integer(ENV.fetch('RATE_LIMIT_UNAUTHENTICATED'){ 300 })
+  rate_limit_non_authed_period = Integer(ENV.fetch('RATE_LIMIT_UNAUTHENTICATED_PERIOD_MINUTES'){ 5 }).minutes
+  throttle('throttle_unauthenticated_api', limit: rate_limit_non_authed, period: rate_limit_non_authed_period) do |req|
     req.throttleable_remote_ip if req.api_request? && req.unauthenticated?
   end
 
@@ -88,15 +90,21 @@ class Rack::Attack
     req.throttleable_remote_ip if req.path.start_with?('/media_proxy')
   end
 
-  throttle('throttle_api_sign_up', limit: 5, period: 30.minutes) do |req|
+  rate_limit_sign_up = Integer(ENV.fetch('RATE_LIMIT_API_SIGN_UP'){ 5 })
+  rate_limit_sign_up_period = Integer(ENV.fetch('RATE_LIMIT_API_SIGN_UP_PERIOD_MINUTES'){ 30 }).minutes
+  throttle('throttle_api_sign_up', limit: rate_limit_sign_up, period: rate_limit_sign_up_period) do |req|
     req.throttleable_remote_ip if req.post? && req.path == '/api/v1/accounts'
   end
 
-  throttle('throttle_authenticated_paging', limit: 300, period: 15.minutes) do |req|
+  limit_authed_paging = Integer(ENV.fetch('RATE_LIMIT_AUTHENTICATED_PAGING'){ 300 })
+  limit_authed_paging_period = Integer(ENV.fetch('RATE_LIMIT_AUTHENTICATED_PAGING_PERIOD_MINUTES'){ 15 }).minutes
+  throttle('throttle_authenticated_paging', limit: limit_authed_paging, period: limit_authed_paging_period) do |req|
     req.authenticated_user_id if req.paging_request?
   end
 
-  throttle('throttle_unauthenticated_paging', limit: 300, period: 15.minutes) do |req|
+  limit_non_authed_paging = Integer(ENV.fetch('RATE_LIMIT_UNAUTHENTICATED_PAGING'){ 300 })
+  limit_non_authed_paging_period = Integer(ENV.fetch('RATE_LIMIT_UNAUTHENTICATED_PAGING_PERIOD_MINUTES'){ 15 }).minutes
+  throttle('throttle_unauthenticated_paging', limit: limit_non_authed_paging, period: limit_non_authed_paging_period) do |req|
     req.throttleable_remote_ip if req.paging_request? && req.unauthenticated?
   end
 
@@ -107,7 +115,9 @@ class Rack::Attack
     req.authenticated_user_id if (req.post? && req.path.match?(API_DELETE_REBLOG_REGEX)) || (req.delete? && req.path.match?(API_DELETE_STATUS_REGEX))
   end
 
-  throttle('throttle_sign_up_attempts/ip', limit: 25, period: 5.minutes) do |req|
+  rate_limit_sign_up = Integer(ENV.fetch('RATE_LIMIT_SIGN_UP'){ 25 })
+  rate_limit_sign_up_period = Integer(ENV.fetch('RATE_LIMIT_SIGN_UP_PERIOD_MINUTES'){ 5 }).minutes
+  throttle('throttle_sign_up_attempts/ip', limit: rate_limit_sign_up, period: rate_limit_sign_up_period) do |req|
     req.throttleable_remote_ip if req.post? && req.path_matches?('/auth')
   end
 
