@@ -52,6 +52,7 @@ Click below to **learn more** in a video:
 | RATE_LIMIT_API_SIGN_UP_PERIOD_MINUTES            | The rate limiter period (i.e. how long before the count resets) for sign up attempts via the api            |
 | RATE_LIMIT_SIGN_UP                               | Max allowed sign up attempts, via the web UI, within a rate limiter period                                  |
 | RATE_LIMIT_SIGN_UP_PERIOD_MINUTES                | The rate limiter period (i.e. how long before the count resets) for sign up attempts via the web UI         |
+| MAX_LINK_CRAWL_DELAY_SECONDS                     | Maximum delay before crawling links received from other instances.                                          |
 
 
 ## Features
