@@ -285,7 +285,7 @@ class ActivityPub::ProcessStatusUpdateService < BaseService
 
   def reset_preview_card!
     @status.preview_cards.clear
-    LinkCrawlWorker.perform_in(rand(1..59).seconds, @status.id)
+    LinkCrawlWorker.perform_in(rand(1..LinkCrawlWorker::MAX_DELAY).seconds, @status.id)
   end
 
   def broadcast_updates!
