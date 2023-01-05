@@ -27,6 +27,7 @@ en:
           none: Use this to send a warning to the user, without triggering any other action.
           sensitive: Force all this user's media attachments to be flagged as sensitive.
           silence: Prevent the user from being able to post with public visibility, hide their posts and notifications from people not following them. Closes all reports against this account.
+          suspend_without_deletion: Prevent any interaction from or to this account but <strong>do not</strong> delete its contents. This is mostly for compliance with 18 USC §2258A.
           suspend: Prevent any interaction from or to this account and delete its contents. Revertible within 30 days. Closes all reports against this account.
         warning_preset_id: Optional. You can still add custom text to end of the preset
       announcement:
@@ -166,6 +167,7 @@ en:
           none: Send a warning
           sensitive: Sensitive
           silence: Limit
+          suspend_without_deletion: Suspend without deleting
           suspend: Suspend
         warning_preset_id: Use a warning preset
       announcement:
