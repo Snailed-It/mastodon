@@ -149,8 +149,10 @@ en:
       subscribe: Subscribe
       suspend: Suspend
       suspended: Suspended
+      suspended_without_deletion: Suspended (without deletion)
       suspension_irreversible: The data of this account has been irreversibly deleted. You can unsuspend the account to make it usable but it will not recover any data it previously had.
       suspension_reversible_hint_html: The account has been suspended, and the data will be fully removed on %{date}. Until then, the account can be restored without any ill effects. If you wish to remove all of the account's data immediately, you can do so below.
+      suspension_permanently_reversible_hint_html: The account has been suspended, but the data has not been removed. The account can be restored without any ill effects. If you wish to remove all of the account's data immediately, you can do so below.
       title: Accounts
       unblock_email: Unblock email address
       unblocked_email_msg: Successfully unblocked %{username}'s email address
@@ -274,6 +276,7 @@ en:
         sensitive_account_html: "%{name} marked %{target}'s media as sensitive"
         silence_account_html: "%{name} limited %{target}'s account"
         suspend_account_html: "%{name} suspended %{target}'s account"
+        suspend_without_deletion_account_html: "%{name} suspended (without deleting) %{target}'s account"
         unassigned_report_html: "%{name} unassigned report %{target}"
         unblock_email_account_html: "%{name} unblocked %{target}'s email address"
         unsensitive_account_html: "%{name} unmarked %{target}'s media as sensitive"
@@ -791,6 +794,7 @@ en:
         sensitive: "%{name} marked %{target}'s account as sensitive"
         silence: "%{name} limited %{target}'s account"
         suspend: "%{name} suspended %{target}'s account"
+        suspend_without_deletion: "%{name} suspended (without deleting) %{target}'s account"
       appeal_approved: Appealed
       appeal_pending: Appeal pending
     system_checks:
@@ -918,6 +922,7 @@ en:
         sensitive: to mark their account as sensitive
         silence: to limit their account
         suspend: to suspend their account
+        suspend_without_deletion: to suspend (without deleting) their account
       body: "%{target} is appealing a moderation decision by %{action_taken_by} from %{date}, which was %{type}. They wrote:"
       next_steps: You can approve the appeal to undo the moderation decision, or ignore it.
       subject: "%{username} is appealing a moderation decision on %{instance}"
@@ -1109,6 +1114,7 @@ en:
         none: Warning
         sensitive: Marking of account as sensitive
         silence: Limitation of account
+        suspend_without_deletion: Suspension of account
         suspend: Suspension of account
       your_appeal_approved: Your appeal has been approved
       your_appeal_pending: You have submitted an appeal
@@ -1656,6 +1662,7 @@ en:
         sensitive: From now on, all your uploaded media files will be marked as sensitive and hidden behind a click-through warning.
         silence: You can still use your account but only people who are already following you will see your posts on this server, and you may be excluded from various discovery features. However, others may still manually follow you.
         suspend: You can no longer use your account, and your profile and other data are no longer accessible. You can still login to request a backup of your data until the data is fully removed in about 30 days, but we will retain some basic data to prevent you from evading the suspension.
+        suspend_without_deletion: You can no longer use your account, and your profile and other data are no longer accessible. You can still login to request a backup of your data until the data is fully removed, but we will retain some basic data to prevent you from evading the suspension.
       reason: 'Reason:'
       statuses: 'Posts cited:'
       subject:
@@ -1674,6 +1681,7 @@ en:
         sensitive: Account marked as sensitive
         silence: Account limited
         suspend: Account suspended
+        suspend_without_deletion: Account suspended
     welcome:
       edit_profile_action: Setup profile
       edit_profile_step: You can customize your profile by uploading a profile picture, changing your display name and more. You can opt-in to review new followers before they’re allowed to follow you.
