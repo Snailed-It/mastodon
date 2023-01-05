@@ -14,7 +14,7 @@ import Column from 'mastodon/components/column';
 import ColumnHeader from 'mastodon/components/column_header';
 import Search from 'mastodon/features/compose/containers/search_container';
 import { identityContextPropShape, withIdentity } from 'mastodon/identity_context';
-import { trendsEnabled } from 'mastodon/initial_state';
+import { trendsEnabled, publicTrends } from 'mastodon/initial_state';
 
 import Links from './links';
 import SearchResults from './results';
@@ -29,7 +29,8 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   layout: state.getIn(['meta', 'layout']),
-  isSearching: state.getIn(['search', 'submitted']) || !trendsEnabled,
+  // !state.meta.me is the same as `identity.signedIn`, it's just hard to access context here
+  isSearching: state.getIn(['search', 'submitted']) || !trendsEnabled || !state.getIn(['meta', 'me']) && !publicTrends,
 });
 
 class Explore extends PureComponent {

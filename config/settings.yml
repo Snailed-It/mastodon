@@ -20,6 +20,7 @@ defaults: &defaults
   trends: true
   trends_as_landing_page: true
   trendable_by_default: false
+  trends_preview: true
   reserved_usernames:
     - admin
     - support
