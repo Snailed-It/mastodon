@@ -127,6 +127,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       title: instance_presenter.title,
       landing_page: Setting.landing_page,
       trends_enabled: Setting.trends,
+      trends_preview: Setting.trends_preview,
       version: instance_presenter.version,
       terms_of_service_enabled: TermsOfService.current.present?,
       local_live_feed_access: Setting.local_live_feed_access,
