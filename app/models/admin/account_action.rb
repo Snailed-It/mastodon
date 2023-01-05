@@ -10,6 +10,7 @@ class Admin::AccountAction
     disable
     sensitive
     silence
+    suspend_without_deletion
     suspend
   ).freeze
 
@@ -96,6 +97,8 @@ class Admin::AccountAction
       handle_sensitive!
     when 'silence'
       handle_silence!
+    when 'suspend_without_deletion'
+      handle_suspend! schedule_deletion: false
     when 'suspend'
       handle_suspend!
     end
@@ -148,10 +151,11 @@ class Admin::AccountAction
     target_account.silence!
   end
 
-  def handle_suspend!
+  def handle_suspend!(schedule_deletion: true)
     authorize(target_account, :suspend?)
-    log_action(:suspend, target_account)
-    target_account.suspend!(origin: :local)
+    action = schedule_deletion ? :suspend : :suspend_without_deletion
+    log_action(action, target_account)
+    target_account.suspend!(origin: :local, schedule_deletion: schedule_deletion)
   end
 
   def text_for_warning
@@ -163,7 +167,7 @@ class Admin::AccountAction
   end
 
   def process_queue!
-    queue_suspension_worker! if type == 'suspend'
+    queue_suspension_worker! if type == 'suspend' || type == 'suspend_without_deletion'
   end
 
   def process_notification!
