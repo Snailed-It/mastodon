@@ -39,6 +39,7 @@ import {
   localLiveFeedAccess,
   remoteLiveFeedAccess,
   trendsEnabled,
+  publicTrends,
   me,
 } from 'mastodon/initial_state';
 import { transientSingleColumn } from 'mastodon/is_mobile';
@@ -257,7 +258,7 @@ export const NavigationPanel: React.FC<{ multiColumn?: boolean }> = ({
           </>
         )}
 
-        {trendsEnabled && (
+        {trendsEnabled && (signedIn || publicTrends) && (
           <ColumnLink
             transparent
             to='/explore'
