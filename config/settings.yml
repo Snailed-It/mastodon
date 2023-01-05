@@ -37,6 +37,7 @@ defaults: &defaults
   trends: true
   trends_as_landing_page: true
   trendable_by_default: false
+  trends_preview: true
   crop_images: true
   notification_emails:
     follow: true
