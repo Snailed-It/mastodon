@@ -35,6 +35,7 @@ module Admin
       @account_moderation_note = current_account.account_moderation_notes.new(target_account: @account)
       @moderation_notes        = @account.targeted_moderation_notes.chronological.includes(:account)
       @warnings                = @account.strikes.includes(:target_account, :account, :appeal).latest
+      @suspended_without_deletion = @account.suspended_without_deletion?
       @domain_block            = DomainBlock.rule_for(@account.domain)
     end
 
