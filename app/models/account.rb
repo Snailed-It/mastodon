@@ -220,13 +220,18 @@ class Account < ApplicationRecord
     suspended? && deletion_request.nil?
   end
 
+  # "Suspended temporarily" is a questionable descriptor. It should actually be named "Is this account's data still present?"
   def suspended_temporarily?
-    suspended? && deletion_request.present?
+    suspended? && (deletion_request.present? || suspended_without_deletion?)
   end
 
-  def suspend!(date: Time.now.utc, origin: :local, block_email: true)
+  def suspended_without_deletion?
+    suspended? && strikes.latest.first&.suspend_without_deletion_action?
+  end
+
+  def suspend!(date: Time.now.utc, origin: :local, block_email: true, schedule_deletion: true)
     transaction do
-      create_deletion_request!
+      create_deletion_request! if schedule_deletion
       update!(suspended_at: date, suspension_origin: origin)
       create_canonical_email_block! if block_email
     end

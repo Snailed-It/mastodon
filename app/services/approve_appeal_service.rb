@@ -33,6 +33,8 @@ class ApproveAppealService < BaseService
       undo_sensitive!
     when 'silence'
       undo_silence!
+    when 'suspend_without_deletion'
+      undo_suspend!
     when 'suspend'
       undo_suspend!
     end
