@@ -27,6 +27,7 @@ class Form::AdminSettings
     mascot
     trends
     trendable_by_default
+    trends_preview
     show_domain_blocks
     show_domain_blocks_rationale
     allow_referrer_origin
@@ -68,6 +69,7 @@ class Form::AdminSettings
     profile_directory
     trends
     trendable_by_default
+    trends_preview
     noindex
     require_invite_text
     captcha_enabled

@@ -3,6 +3,7 @@
 class Api::V1::Trends::StatusesController < Api::BaseController
   vary_by 'Authorization, Accept-Language'
 
+  before_action :require_user!, only: [:index], if: :require_auth?
   before_action :set_statuses
 
   after_action :insert_pagination_headers
@@ -13,6 +14,10 @@ class Api::V1::Trends::StatusesController < Api::BaseController
   end
 
   private
+
+  def require_auth?
+    !Setting.trends_preview
+  end
 
   def enabled?
     Setting.trends
