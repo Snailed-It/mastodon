@@ -23,6 +23,9 @@
               wrapper: :with_label,
               recommended: :not_recommended
 
+  .fields-group
+    = f.input :trends_preview, as: :boolean, wrapper: :with_label
+
   %h2= t('admin.settings.discovery.public_timelines')
 
   .fields-row
