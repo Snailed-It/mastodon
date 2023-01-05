@@ -12,7 +12,7 @@ import Suggestions from './suggestions';
 import Search from 'mastodon/features/compose/containers/search_container';
 import SearchResults from './results';
 import { Helmet } from 'react-helmet';
-import { showTrends } from 'mastodon/initial_state';
+import { publicTrends, showTrends } from 'mastodon/initial_state';
 
 const messages = defineMessages({
   title: { id: 'explore.title', defaultMessage: 'Explore' },
@@ -21,7 +21,8 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   layout: state.getIn(['meta', 'layout']),
-  isSearching: state.getIn(['search', 'submitted']) || !showTrends,
+  // !state.meta.me is the same as `this.context.identity.signedIn`, it's just hard to access context here
+  isSearching: state.getIn(['search', 'submitted']) || !showTrends || !state.getIn(['meta', 'me']) && !publicTrends,
 });
 
 export default @connect(mapStateToProps)

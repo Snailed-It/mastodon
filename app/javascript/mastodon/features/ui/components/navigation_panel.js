@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import Logo from 'mastodon/components/logo';
-import { timelinePreview, showTrends } from 'mastodon/initial_state';
+import { timelinePreview, showTrends, publicTrends } from 'mastodon/initial_state';
 import ColumnLink from './column_link';
 import DisabledAccountBanner from './disabled_account_banner';
 import FollowRequestsColumnLink from './follow_requests_column_link';
@@ -59,7 +59,7 @@ class NavigationPanel extends React.Component {
           </React.Fragment>
         )}
 
-        {showTrends ? (
+        {showTrends && (signedIn || publicTrends) ? (
           <ColumnLink transparent to='/explore' icon='hashtag' text={intl.formatMessage(messages.explore)} />
         ) : (
           <ColumnLink transparent to='/search' icon='search' text={intl.formatMessage(messages.search)} />

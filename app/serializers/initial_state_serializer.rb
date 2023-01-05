@@ -27,6 +27,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       mascot: instance_presenter.mascot&.file&.url,
       profile_directory: Setting.profile_directory,
       trends: Setting.trends,
+      trends_preview: Setting.trends_preview,
       registrations_open: Setting.registrations_mode != 'none' && !Rails.configuration.x.single_user_mode,
       timeline_preview: Setting.timeline_preview,
       activity_api_enabled: Setting.activity_api_enabled,
