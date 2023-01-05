@@ -27,7 +27,10 @@
         - elsif account.memorial?
           = t('admin.accounts.memorialized')
         - elsif account.suspended?
-          = t('admin.accounts.suspended')
+          - if @suspended_without_deletion
+            = t('admin.accounts.suspended_without_deletion')
+          - else
+            = t('admin.accounts.suspended')
         - elsif account.silenced?
           = t('admin.accounts.silenced')
         - elsif account.local? && account.user&.disabled?
