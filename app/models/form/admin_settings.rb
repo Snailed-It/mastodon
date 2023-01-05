@@ -93,7 +93,8 @@ class Form::AdminSettings
 
   define_model_callbacks :save
   before_save do
-    @status_max_chars = StatusLengthValidator::DEFAULT_MAX_CHARS if @status_max_chars.blank?
+    remove_instance_variable(:@status_max_chars) if @status_max_chars.blank?
+    @status_max_chars = StatusLengthValidator::DEFAULT_MAX_CHARS if @status_max_chars == '0'
   end
 
   KEYS.each do |key|
