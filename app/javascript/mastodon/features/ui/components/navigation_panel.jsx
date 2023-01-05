@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { WordmarkLogo } from 'mastodon/components/logo';
 import NavigationPortal from 'mastodon/components/navigation_portal';
-import { timelinePreview, trendsEnabled } from 'mastodon/initial_state';
+import { timelinePreview, trendsEnabled, publicTrends } from 'mastodon/initial_state';
 import { transientSingleColumn } from 'mastodon/is_mobile';
 
 import ColumnLink from './column_link';
@@ -85,7 +85,7 @@ class NavigationPanel extends Component {
           </>
         )}
 
-        {trendsEnabled ? (
+        {trendsEnabled && (signedIn || publicTrends) ? (
           <ColumnLink transparent to='/explore' icon='hashtag' text={intl.formatMessage(messages.explore)} />
         ) : (
           <ColumnLink transparent to='/search' icon='search' text={intl.formatMessage(messages.search)} />
