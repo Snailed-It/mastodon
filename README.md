@@ -42,6 +42,8 @@ Click below to **learn more** in a video:
 | EXTRA_CONNECT_HOSTS                              | Extra hosts to which scripts are allowed to connect (i.e. these are added to the CSP's `connect_src`)       | 
 | RATE_LIMIT_AUTHENTICATED                         | Max allowed requests, for authenticated users, within a rate limiter period                                 |
 | RATE_LIMIT_AUTHENTICATED_PERIOD_MINUTES          | The rate limiter period (i.e. how long before the count resets) for authenticated users                     |
+| RATE_LIMIT_PER_TOKEN                             | Max allowed requests, for authenticated users, within a rate limiter period                                 |
+| RATE_LIMIT_PER_TOKEN_PERIOD_MINUTES              | The rate limiter period (i.e. how long before the count resets) for authenticated users                     |
 | RATE_LIMIT_UNAUTHENTICATED                       | Max allowed requests, for unauthenticated users (i.e. per ip), within a rate limiter period                 |
 | RATE_LIMIT_UNAUTHENTICATED_PERIOD_MINUTES        | The rate limiter period (i.e. how long before the count resets) for unauthenticated users                   |
 | RATE_LIMIT_AUTHENTICATED_PAGING                  | Max allowed paging requests, for authenticated users, within a rate limiter period                          |
