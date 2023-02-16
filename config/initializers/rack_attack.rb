@@ -72,7 +72,9 @@ class Rack::Attack
     req.authenticated_user_id if req.api_request?
   end
 
-  throttle('throttle_per_token_api', limit: 300, period: 5.minutes) do |req|
+  rate_limit_per_token_value = Integer(ENV.fetch('RATE_LIMIT_PER_TOKEN'){ 300 })
+  rate_limit_per_token_period = Integer(ENV.fetch('RATE_LIMIT_PER_TOKEN_PERIOD_MINUTES'){ 5 }).minutes
+  throttle('throttle_per_token_api', limit: rate_limit_per_token_value, period: rate_limit_per_token_period) do |req|
     req.authenticated_token_id if req.api_request?
   end
 
