@@ -159,6 +159,27 @@ const onChangeRegistrationMode = (target) => {
   });
 };
 
+const onChangeTrendsPreview = (target) => {
+  [].forEach.call(document.querySelectorAll('#form_admin_settings_trends_as_landing_page'), (input) => {
+    input.disabled = !target.checked;
+    if (target.checked) {
+      let element = input;
+      do {
+        element.classList.remove('disabled');
+        element = element.parentElement;
+      } while (element && !element.classList.contains('fields-group'));
+    } else {
+      let element = input;
+      do {
+        element.classList.add('disabled');
+        element = element.parentElement;
+      } while (element && !element.classList.contains('fields-group'));
+    }
+  });
+};
+
+delegate(document, '#form_admin_settings_trends_preview', 'change', ({ target }) => onChangeTrendsPreview(target));
+
 const convertUTCDateTimeToLocal = (value) => {
   const date = new Date(value + 'Z');
   const twoChars = (x) => (x.toString().padStart(2, '0'));
@@ -184,6 +205,9 @@ ready(() => {
 
   const registrationMode = document.getElementById('form_admin_settings_registrations_mode');
   if (registrationMode) onChangeRegistrationMode(registrationMode);
+
+  const allowTrendsPreview = document.getElementById('form_admin_settings_trends_preview');
+  if (allowTrendsPreview) onChangeTrendsPreview(allowTrendsPreview);
 
   const checkAllElement = document.querySelector('#batch_checkbox_all');
   if (checkAllElement) {
