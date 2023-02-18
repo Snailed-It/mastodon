@@ -207,7 +207,7 @@ ready(() => {
   if (registrationMode) onChangeRegistrationMode(registrationMode);
 
   const allowTrendsPreview = document.getElementById('form_admin_settings_trends_preview');
-  if (allowTrendsPreview) onChangeTrendsPreview(registrationMode);
+  if (allowTrendsPreview) onChangeTrendsPreview(allowTrendsPreview);
 
   const checkAllElement = document.querySelector('#batch_checkbox_all');
   if (checkAllElement) {
