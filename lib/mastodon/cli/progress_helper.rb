@@ -63,7 +63,7 @@ module Mastodon::CLI
               aggregate.increment(result) if result.is_a?(Integer)
             end
           rescue => e
-            progress.log pastel.red("Error processing #{item.id}: #{e}")
+            progress.log pastel.red("Error processing #{item.id}: #{e}: #{e.backtrace}")
           ensure
             progress.increment
           end
