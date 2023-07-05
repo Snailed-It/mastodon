@@ -49,10 +49,10 @@ REDIS_SIDEKIQ_BASE_PARAMS = {
   namespace: sidekiq_namespace,
 }
 
-REDIS_SIDEKIQ_PARAMS = if REDIS_SENTINELS.nil?
+REDIS_SIDEKIQ_PARAMS = if REDIS_SENTINELS.nil? || ENV['SIDEKIQ_REDIS_NAME'].nil?
                          REDIS_SIDEKIQ_BASE_PARAMS.merge({ url: ENV['SIDEKIQ_REDIS_URL'] })
                        else
-                         REDIS_SIDEKIQ_BASE_PARAMS.merge({ sentinels: REDIS_SENTINELS })
+                         REDIS_SIDEKIQ_BASE_PARAMS.merge({ sentinels: REDIS_SENTINELS, name: ENV['SIDEKIQ_REDIS_NAME'] })
                        end.freeze
 
 if Rails.env.test?
