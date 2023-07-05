@@ -41,7 +41,9 @@ REDIS_CACHE_PARAMS = {
 }.freeze
 
 REDIS_SENTINELS = ENV.fetch('SIDEKIQ_REDIS_SENTINELS', nil)&.split(',')&.map do |address|
-  { host: address, port: ENV.fetch('SIDEKIQ_REDIS_PORT', 6379) }
+  sentinel = { host: address, port: ENV.fetch('SIDEKIQ_REDIS_PORT', 6379) }
+  sentinel[:password] = ENV['SIDEKIQ_REDIS_PASSWORD']
+  sentinel
 end
 
 REDIS_SIDEKIQ_BASE_PARAMS = {
