@@ -42,17 +42,19 @@ REDIS_CACHE_PARAMS = {
 
 REDIS_SENTINELS = ENV.fetch('SIDEKIQ_REDIS_SENTINELS', nil)&.split(',')&.map do |address|
   sentinel = { host: address, port: ENV.fetch('SIDEKIQ_REDIS_PORT', 6379) }
-  sentinel[:password] = ENV['SIDEKIQ_REDIS_PASSWORD']
+  sidekiq_redis_password = ENV['SIDEKIQ_REDIS_PASSWORD']
+  sentinel[:password] = sidekiq_redis_password unless sidekiq_redis_password.nil?
   sentinel
 end
 
 REDIS_SIDEKIQ_BASE_PARAMS = {
   driver: :hiredis,
   namespace: sidekiq_namespace,
+  url: ENV['SIDEKIQ_REDIS_URL']
 }
 
 REDIS_SIDEKIQ_PARAMS = if REDIS_SENTINELS.nil? || ENV['SIDEKIQ_REDIS_NAME'].nil?
-                         REDIS_SIDEKIQ_BASE_PARAMS.merge({ url: ENV['SIDEKIQ_REDIS_URL'] })
+                         REDIS_SIDEKIQ_BASE_PARAMS
                        else
                          REDIS_SIDEKIQ_BASE_PARAMS.merge({ sentinels: REDIS_SENTINELS, name: ENV['SIDEKIQ_REDIS_NAME'] })
                        end.freeze
