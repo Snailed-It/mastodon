@@ -134,11 +134,24 @@ const redisConfigFromEnv = (env) => {
   const redisPrefix = env.REDIS_NAMESPACE ? `${env.REDIS_NAMESPACE}:` : '';
 
   const redisParams = {
-    host: env.REDIS_HOST || '127.0.0.1',
-    port: env.REDIS_PORT || 6379,
     db: env.REDIS_DB || 0,
     password: env.REDIS_PASSWORD || undefined,
   };
+  const redisSentinels = (() => {
+    if (!process.env.REDIS_SENTINELS) {
+      return undefined;
+    }
+    return process.env.REDIS_SENTINELS.split(',').map(address => {
+      return { host: address, port: process.env.REDIS_PORT || 6379 };
+    });
+  })();
+  if (redisSentinels) {
+    redisParams.sentinels = redisSentinels;
+    redisParams.name = process.env.REDIS_SENTINEL_MASTER || process.env.REDIS_NAME;
+  } else {
+    redisParams.host = process.env.REDIS_HOST || '127.0.0.1';
+    redisParams.port = process.env.REDIS_PORT || 6379;
+  }
 
   // redisParams.path takes precedence over host and port.
   if (env.REDIS_URL && env.REDIS_URL.startsWith('unix://')) {
