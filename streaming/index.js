@@ -5,7 +5,7 @@ const throng = require('throng');
 const dotenv = require('dotenv');
 const express = require('express');
 const http = require('http');
-const redis = require('redis');
+const Redis = require('ioredis');
 const pg = require('pg');
 const log = require('npmlog');
 const url = require('url');
@@ -70,17 +70,11 @@ const redisUrlToClient = async (defaultConfig, redisUrl) => {
   let client;
 
   if (!redisUrl) {
-    client = redis.createClient(config);
+    client = new Redis(config);
   } else if (redisUrl.startsWith('unix://')) {
-    client = redis.createClient(Object.assign(config, {
-      socket: {
-        path: redisUrl.slice(7),
-      },
-    }));
+    client = new Redis(redisUrl.slice(7), config);
   } else {
-    client = redis.createClient(Object.assign(config, {
-      url: redisUrl,
-    }));
+    client = new Redis(redisUrl, config);
   }
 
   client.on('error', (err) => log.error('Redis Client Error!', err));
@@ -165,13 +159,24 @@ const startWorker = async (workerId) => {
   const redisNamespace = process.env.REDIS_NAMESPACE || null;
 
   const redisParams = {
-    socket: {
-      host: process.env.REDIS_HOST || '127.0.0.1',
-      port: process.env.REDIS_PORT || 6379,
-    },
     database: process.env.REDIS_DB || 0,
     password: process.env.REDIS_PASSWORD || undefined,
   };
+  const redisSentinels = (() => {
+    if (!process.env.REDIS_SENTINELS) {
+      return undefined;
+    }
+    return process.env.REDIS_SENTINELS.split(',').map(address => {
+      return { host: address, port: process.env.REDIS_PORT || 6379 };
+    });
+  })();
+  if (redisSentinels) {
+    redisParams.sentinels = redisSentinels;
+    redisParams.name = process.env.REDIS_NAME;
+  } else {
+    redisParams.host = process.env.REDIS_HOST || '127.0.0.1';
+    redisParams.port = process.env.REDIS_PORT || 6379;
+  }
 
   if (redisNamespace) {
     redisParams.namespace = redisNamespace;
@@ -243,7 +248,12 @@ const startWorker = async (workerId) => {
 
     if (subs[channel].length === 0) {
       log.verbose(`Subscribe ${channel}`);
-      redisSubscribeClient.subscribe(channel, onRedisMessage);
+      redisSubscribeClient.subscribe(channel, err => {
+        if (err) {
+          log.error(`Failed to subscribe to ${channel}`, err.toString());
+        }
+      });
+      redisSubscribeClient.on('message', onRedisMessage);
     }
 
     subs[channel].push(callback);
