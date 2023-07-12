@@ -40,7 +40,7 @@ REDIS_CACHE_PARAMS = {
   connect_timeout: 5,
 }.freeze
 
-REDIS_SENTINELS = ENV.fetch('SIDEKIQ_REDIS_SENTINELS', nil)&.split(',')&.map do |address|
+REDIS_SENTINELS = ENV.fetch('REDIS_SENTINELS', ENV['SIDEKIQ_REDIS_SENTINELS'])&.split(',')&.map do |address|
   sentinel = { host: address, port: ENV.fetch('SIDEKIQ_REDIS_PORT', 6379) }
   sidekiq_redis_password = ENV['SIDEKIQ_REDIS_PASSWORD']
   sentinel[:password] = sidekiq_redis_password unless sidekiq_redis_password.nil?
@@ -53,7 +53,7 @@ REDIS_SIDEKIQ_BASE_PARAMS = {
   url: ENV['SIDEKIQ_REDIS_URL']
 }
 
-REDIS_SIDEKIQ_PARAMS = if REDIS_SENTINELS.nil? || ENV['SIDEKIQ_REDIS_NAME'].nil?
+REDIS_SIDEKIQ_PARAMS = if REDIS_SENTINELS.nil? || ENV.fetch('REDIS_NAME', ENV['SIDEKIQ_REDIS_NAME']).nil?
                          REDIS_SIDEKIQ_BASE_PARAMS
                        else
                          REDIS_SIDEKIQ_BASE_PARAMS.merge({ sentinels: REDIS_SENTINELS, name: ENV['SIDEKIQ_REDIS_NAME'] })
