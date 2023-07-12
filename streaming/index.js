@@ -78,7 +78,6 @@ const redisUrlToClient = async (defaultConfig, redisUrl) => {
   }
 
   client.on('error', (err) => log.error('Redis Client Error!', err));
-  await client.connect();
 
   return client;
 };
