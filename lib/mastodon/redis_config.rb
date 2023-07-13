@@ -40,8 +40,16 @@ REDIS_CACHE_PARAMS = {
   connect_timeout: 5,
 }.freeze
 
+def parse_redis_sentinels(sentinels, port, password)
+  sentinels.split(',').map do |address|
+    sentinel = { host: address, port: port || 6379 }
+    sentinel[:password] = password unless password.nil?
+    sentinel
+  end
+end
+
 sentinels_env = ENV.fetch('REDIS_SENTINELS', ENV['SIDEKIQ_REDIS_SENTINELS'])
-REDIS_SENTINELS = RedisConfiguration.parse_sentinels(sentinels_env, ENV['SIDEKIQ_REDIS_PORT'], ENV['SIDEKIQ_REDIS_PASSWORD']) unless sentinels_env.nil?
+REDIS_SENTINELS = parse_redis_sentinels(sentinels_env, ENV['SIDEKIQ_REDIS_PORT'], ENV['SIDEKIQ_REDIS_PASSWORD']) unless sentinels_env.nil?
 REDIS_SENTINELS = nil if sentinels_env.nil?
 
 REDIS_SIDEKIQ_BASE_PARAMS = {
