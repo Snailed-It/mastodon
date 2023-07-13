@@ -48,16 +48,8 @@ class RedisConfiguration
     if ENV['REDIS_SENTINELS'].nil? || ENV['REDIS_NAME'].nil?
       Redis.new(url: url, driver: :hiredis)
     else
-      sentinels = parse_sentinels(ENV['REDIS_SENTINELS'], ENV['REDIS_PORT'], ENV['REDIS_PASSWORD'])
+      sentinels = parse_redis_sentinels(ENV['REDIS_SENTINELS'], ENV['REDIS_PORT'], ENV['REDIS_PASSWORD'])
       Redis.new(name: ENV['REDIS_NAME'], sentinels: sentinels, role: :master)
-    end
-  end
-
-  def parse_sentinels(sentinels, port, password)
-    sentinels.split(',').map do |address|
-      sentinel = { host: address, port: port || 6379 }
-      sentinel[:password] = password unless password.nil?
-      sentinel
     end
   end
 end
