@@ -49,7 +49,7 @@ class RedisConfiguration
       Redis.new(url: url, driver: :hiredis)
     else
       sentinels = parse_redis_sentinels(ENV['REDIS_SENTINELS'], ENV['REDIS_PORT'], ENV['REDIS_PASSWORD'])
-      Redis.new(name: ENV['REDIS_NAME'], sentinels: sentinels, role: :master)
+      Redis.new(host: ENV['REDIS_NAME'], sentinels: sentinels, role: :master, driver: :hiredis)
     end
   end
 end
