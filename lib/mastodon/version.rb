@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def suffix
-      ''
+      '+snailedit.1'
     end
 
     def to_a
