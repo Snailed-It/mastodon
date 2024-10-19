@@ -239,6 +239,35 @@ const onChangeRegistrationMode = (target: HTMLSelectElement) => {
     });
 };
 
+const onChangeTrendsPreview = (target) => {
+  [].forEach.call(document.querySelectorAll('#form_admin_settings_trends_as_landing_page'), (input) => {
+    input.disabled = !target.checked;
+    if (target.checked) {
+      let element = input;
+      do {
+        element.classList.remove('disabled');
+        element = element.parentElement;
+      } while (element && !element.classList.contains('fields-group'));
+    } else {
+      let element = input;
+      do {
+        element.classList.add('disabled');
+        element = element.parentElement;
+      } while (element && !element.classList.contains('fields-group'));
+    }
+  });
+};
+
+Rails.delegate(
+  document,
+  '#form_admin_settings_trends_preview',
+  'change',
+  ({ target }) => {
+    if (target instanceof HTMLInputElement)
+      onChangeTrendsPreview(target);
+  },
+);
+
 const convertUTCDateTimeToLocal = (value: string) => {
   const date = new Date(value + 'Z');
   const twoChars = (x: number) => x.toString().padStart(2, '0');
@@ -303,6 +332,11 @@ ready(() => {
     'select#form_admin_settings_registrations_mode',
   );
   if (registrationMode) onChangeRegistrationMode(registrationMode);
+
+  const allowTrendsPreview = document.querySelector<HTMLSelectElement>(
+    'select#form_admin_settings_trends_preview',
+  );
+  if (allowTrendsPreview) onChangeTrendsPreview(allowTrendsPreview);
 
   const checkAllElement = document.querySelector<HTMLInputElement>(
     'input#batch_checkbox_all',
