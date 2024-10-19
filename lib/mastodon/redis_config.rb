@@ -58,10 +58,10 @@ REDIS_SIDEKIQ_BASE_PARAMS = {
   url: ENV['SIDEKIQ_REDIS_URL']
 }
 
-REDIS_SIDEKIQ_PARAMS = if REDIS_SENTINELS.nil? || ENV.fetch('REDIS_NAME', ENV['SIDEKIQ_REDIS_NAME']).nil?
+REDIS_SIDEKIQ_PARAMS = if REDIS_SENTINELS.nil? || ENV.fetch('REDIS_SENTINEL_MASTER', ENV.fetch('REDIS_NAME', ENV['SIDEKIQ_REDIS_NAME'])).nil?
                          REDIS_SIDEKIQ_BASE_PARAMS
                        else
-                         REDIS_SIDEKIQ_BASE_PARAMS.merge({ sentinels: REDIS_SENTINELS, name: ENV['SIDEKIQ_REDIS_NAME'] })
+                         REDIS_SIDEKIQ_BASE_PARAMS.merge({ sentinels: REDIS_SENTINELS, name: ENV.fetch('REDIS_SENTINEL_MASTER', ENV.fetch('REDIS_NAME', ENV['SIDEKIQ_REDIS_NAME'])) })
                        end.freeze
 
 ENV['REDIS_NAMESPACE'] = "mastodon_test#{ENV['TEST_ENV_NUMBER']}" if Rails.env.test?

@@ -45,11 +45,11 @@ class RedisConfiguration
   private
 
   def raw_connection
-    if ENV['REDIS_SENTINELS'].nil? || ENV['REDIS_NAME'].nil?
+    if ENV['REDIS_SENTINELS'].nil? || ENV.fetch('REDIS_SENTINEL_MASTER', ENV.fetch('REDIS_NAME')).nil?
       Redis.new(url: url, driver: :hiredis)
     else
       sentinels = parse_redis_sentinels(ENV['REDIS_SENTINELS'], ENV['REDIS_PORT'], ENV['REDIS_PASSWORD'])
-      Redis.new(host: ENV['REDIS_NAME'], sentinels: sentinels, role: :master, driver: :hiredis)
+      Redis.new(host: ENV.fetch('REDIS_SENTINEL_MASTER', ENV['REDIS_NAME']), sentinels: sentinels, role: :master, driver: :hiredis)
     end
   end
 end
