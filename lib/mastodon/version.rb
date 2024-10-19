@@ -25,7 +25,7 @@ module Mastodon
     end
 
     def build_metadata
-      ENV.fetch('MASTODON_VERSION_METADATA', '+snailedit.2')
+      ENV.fetch('MASTODON_VERSION_METADATA', 'snailedit.3').presence || 'snailedit.3'
     end
 
     def to_a
