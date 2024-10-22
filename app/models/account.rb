@@ -247,6 +247,10 @@ class Account < ApplicationRecord
     suspended? && (deletion_request.present? || suspended_without_deletion?)
   end
 
+  def suspended_without_deletion?
+    suspended? && strikes.latest.first&.suspend_without_deletion_action?
+  end
+
   def suspend!(date: Time.now.utc, origin: :local, block_email: true, schedule_deletion: true)
     transaction do
       create_deletion_request! if schedule_deletion
