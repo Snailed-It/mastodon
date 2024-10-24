@@ -26,7 +26,7 @@ import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../act
 import { clearHeight } from '../../actions/height_cache';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
-import { initialState, me, owner, singleUserMode, trendsEnabled, landingPage, localLiveFeedAccess, disableHoverCards } from '../../initial_state';
+import { initialState, me, owner, singleUserMode, trendsEnabled, publicTrends, landingPage, localLiveFeedAccess, disableHoverCards } from '../../initial_state';
 
 import BundleColumnError from './components/bundle_column_error';
 import { NavigationBar } from './components/navigation_bar';
@@ -147,7 +147,7 @@ class SwitchingColumnsArea extends PureComponent {
       }
     } else if (singleUserMode && owner && initialState?.accounts[owner]) {
       redirect = <Redirect from='/' to={`/@${initialState.accounts[owner].username}`} exact />;
-    } else if (trendsEnabled && landingPage === 'trends') {
+    } else if (trendsEnabled && landingPage === 'trends' && (signedIn || publicTrends)) {
       redirect = <Redirect from='/' to='/explore' exact />;
     } else if (localLiveFeedAccess === 'public' && landingPage === 'local_feed') {
       redirect = <Redirect from='/' to='/public/local' exact />;
