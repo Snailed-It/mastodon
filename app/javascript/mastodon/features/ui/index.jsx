@@ -29,7 +29,7 @@ import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../act
 import { clearHeight } from '../../actions/height_cache';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
-import { initialState, me, owner, singleUserMode, trendsEnabled, landingPage, localLiveFeedAccess, disableHoverCards, domain } from '../../initial_state';
+import { initialState, me, owner, singleUserMode, trendsEnabled, publicTrends, landingPage, localLiveFeedAccess, disableHoverCards, domain } from '../../initial_state';
 
 import BundleColumnError from './components/bundle_column_error';
 import { NavigationBar } from './components/navigation_bar';
@@ -173,7 +173,7 @@ class SwitchingColumnsArea extends PureComponent {
       }
     } else if (singleUserMode && owner && initialState?.accounts[owner]) {
       rootRedirect = `/@${initialState.accounts[owner].username}`;
-    } else if (trendsEnabled && landingPage === 'trends') {
+    } else if (trendsEnabled && landingPage === 'trends' && (signedIn || publicTrends)) {
       rootRedirect = '/explore';
     } else if (localLiveFeedAccess === 'public' && landingPage === 'local_feed') {
       rootRedirect = '/public/local';
