@@ -130,13 +130,6 @@ jobs:
           pattern: digests-${{ hashFiles(inputs.file_to_build) }}-*
           merge-multiple: true
 
-      - name: Log in to Docker Hub
-        if: contains(inputs.push_to_images, 'tootsuite')
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Log in to the GitHub Container registry
         if: contains(inputs.push_to_images, 'ghcr.io')
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
