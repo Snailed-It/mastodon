@@ -90,6 +90,7 @@ class InitialStateSerializer < ActiveModel::Serializer
 
   def features
     Mastodon::Feature.enabled_features
+  end
 
   def server
     {
