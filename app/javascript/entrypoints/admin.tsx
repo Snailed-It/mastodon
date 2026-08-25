@@ -334,11 +334,6 @@ ready(() => {
 
   if (inviteUsersPermissionChecbkox) onChangeInviteUsersPermission(inviteUsersPermissionChecbkox);
 
-  const allowTrendsPreview = document.querySelector<HTMLSelectElement>(
-    'select#form_admin_settings_trends_preview',
-  );
-  if (allowTrendsPreview) onChangeTrendsPreview(allowTrendsPreview);
-
   const checkAllElement = document.querySelector<HTMLInputElement>(
     '#batch_checkbox_all',
   );
